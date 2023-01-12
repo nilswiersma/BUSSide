@@ -18,7 +18,7 @@ def i2c_discover_slaves(sda, scl):
         return None
     (bs_reply_length, bs_reply_args) = rv
 
-    nslave_addresses = bs_reply_length / 4
+    nslave_addresses = bs_reply_length // 4
     print("+++ %d I2C slave addresses" % (nslave_addresses))
     for i in range(nslave_addresses):
         print("+++ I2C slave address FOUND at %i" % bs_reply_args[i])
@@ -34,7 +34,7 @@ def i2c_discover():
         return None
     (bs_reply_length, bs_reply_args) = rv
 
-    n = bs_reply_length / 8
+    n = bs_reply_length // 8
     print("+++ FOUND %d I2C interfaces" % (n))
     for i in range(n):
         sda = bs_reply_args[i*2 + 0]
@@ -78,7 +78,7 @@ def doCommand(command):
         return None
 
 def writeI2C(sda, scl, slave, size, skip, alen, data):
-    request_args = list(range(6 + size / 4))
+    request_args = list(range(6 + size // 4))
     request_args[0] = slave
     request_args[1] = size
     request_args[2] = skip
@@ -97,8 +97,8 @@ def dumpI2C(sda, scl, slave, size, skip, alen):
     if rv is None:
         return None
     (bs_reply_length, bs_reply_args) = rv
-    data = ""
-    for i in range(bs_reply_length / 4):
+    data = b""
+    for i in range(bs_reply_length // 4):
         data = data + struct.pack('<I', bs_reply_args[i])
     return data
 
@@ -134,8 +134,8 @@ def i2c_write_flash(sda, scl, slave, alen, dumpsize, infile):
                 size = WRITEBLOCKSIZE
             f.seek(skip)
             rawdata = f.read(size)
-            data = list(range(size/4))
-            for i in range(size/4):
+            data = list(range(size//4))
+            for i in range(size//4):
                 a = ord(rawdata[4*i + 0])
                 b = ord(rawdata[4*i + 1])
                 c = ord(rawdata[4*i + 2])

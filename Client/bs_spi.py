@@ -17,7 +17,7 @@ def dumpSPI(size, skip):
         return None
     (bs_reply_length, bs_reply_args) = rv
     data = ""
-    for i in range(bs_reply_length / 4):
+    for i in range(bs_reply_length // 4):
         data = data + struct.pack('<I', bs_reply_args[i])
     return data
 
@@ -39,8 +39,8 @@ def spi_dump_flash(dumpsize, outfile):
             f.flush()
             skip = skip + BLOCKSIZE
             dumpsize = dumpsize - size 
-	print("+++ SUCCESS\n")
-	return (1, 1)
+    print("+++ SUCCESS\n")
+    return (1, 1)
 
 def spi_read_id():
     print("+++ Sending SPI read ID command")
@@ -57,11 +57,11 @@ def spi_read_id():
     return (bs_reply_length, bs_reply_args)
 
 def writeSPI(size, skipsize, data):
-    request_args = list(range(3 + size/4))
+    request_args = list(range(3 + size//4))
     request_args[0] = size
     request_args[1] = skipsize
     request_args[2] = 1000000
-    for i in range(size / 4):
+    for i in range(size // 4):
         request_args[3 + i] = data[i]
     rv = bs.requestreply(37, request_args)
     return rv
@@ -78,8 +78,8 @@ def spi_flash(dumpsize, infile):
                 size = WRITEBLOCKSIZE
             f.seek(skip)
             rawdata = f.read(size)
-            data = list(range(size/4))
-            for i in range(size/4):
+            data = list(range(size//4))
+            for i in range(size//4):
                 a = ord(rawdata[4*i + 0])
                 b = ord(rawdata[4*i + 1])
                 c = ord(rawdata[4*i + 2])
@@ -103,7 +103,7 @@ def spi_fuzz(cs, clk, mosi, miso):
         return None
     (bs_reply_length, bs_reply_args) = rv
 
-    n = bs_reply_length / (4*6)
+    n = bs_reply_length // (4*6)
     print("+++ FOUND %d SPI commands" % (n))
     for i in range(n):
         cmd = bs_reply_args[i*6 + 0]
@@ -132,7 +132,7 @@ def spi_discover_pinout():
         return None
     (bs_reply_length, bs_reply_args) = rv
 
-    n = bs_reply_length / (4*4)
+    n = bs_reply_length // (4*4)
     print("+++ FOUND %d SPI interfaces" % (n))
     for i in range(n):
         cs = bs_reply_args[i*4 + 0]

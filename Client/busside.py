@@ -3,6 +3,8 @@
 import struct
 import os
 import sys
+import traceback
+
 import bs_i2c
 import bs_uart
 import bs_jtag
@@ -85,8 +87,9 @@ print("+++")
 
 while True:
     try:
-        command = raw_input("> ")
+        command = input("> ")
     except:
+        traceback.print_exc()
         break
     rv = doCommand(command)
     if rv is None:
